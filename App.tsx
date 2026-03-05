@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from 'react';
 import { User, Task, TaskStatus, AppState, ReminderInterval } from './types';
 import { storageService } from './services/storageService';
@@ -14,7 +13,12 @@ const App: React.FC = () => {
   const [state, setState] = useState<AppState>({
     currentUser: null,
     tasks: [],
-    view: 'login'
+    view: 'login',
+    syncStatus: {
+      lastSynced: null,
+      isSyncing: false,
+      error: null
+    }
   });
 
   const [theme, setTheme] = useState<'light' | 'dark'>(() => {
@@ -54,16 +58,16 @@ const App: React.FC = () => {
           let shouldRemind = false;
           let label = "";
 
-          if (reminder === ReminderInterval.H24 && diffHours <= 24 && diffHours > 23.5) {
+          if (reminder === ReminderInterval.H24 && diffHours <= 24 && diffHours > 0) {
             shouldRemind = true;
             label = "24 hours";
-          } else if (reminder === ReminderInterval.D1 && diffHours <= 24 && diffHours > 23) {
+          } else if (reminder === ReminderInterval.D1 && diffHours <= 24 && diffHours > 0) {
              shouldRemind = true;
              label = "1 day";
-          } else if (reminder === ReminderInterval.D2 && diffHours <= 48 && diffHours > 47) {
+          } else if (reminder === ReminderInterval.D2 && diffHours <= 48 && diffHours > 24) {
              shouldRemind = true;
              label = "2 days";
-          } else if (reminder === ReminderInterval.W1 && diffHours <= 168 && diffHours > 167) {
+          } else if (reminder === ReminderInterval.W1 && diffHours <= 168 && diffHours > 48) {
              shouldRemind = true;
              label = "1 week";
           }
@@ -84,13 +88,13 @@ const App: React.FC = () => {
   const handleLogin = (user: User) => {
     const tasks = storageService.getTasks(user.id);
     storageService.setCurrentUser(user);
-    setState({ currentUser: user, tasks, view: 'dashboard' });
+    setState({ currentUser: user, tasks, view: 'dashboard', syncStatus: { lastSynced: null, isSyncing: false, error: null } });
     if (user.theme) setTheme(user.theme);
   };
 
   const handleLogout = () => {
     storageService.setCurrentUser(null);
-    setState({ currentUser: null, tasks: [], view: 'login' });
+    setState({ currentUser: null, tasks: [], view: 'login', syncStatus: { lastSynced: null, isSyncing: false, error: null } });
   };
 
   const handleAddTask = (taskData: Omit<Task, 'id' | 'userId' | 'createdAt' | 'status'>) => {
@@ -160,7 +164,7 @@ const App: React.FC = () => {
       )}
       {state.view === 'stats' && <Statistics tasks={state.tasks} />}
       {state.view === 'history' && <History tasks={state.tasks} onUpdateTask={handleUpdateTask} onDeleteTask={handleDeleteTask} />}
-      {state.view === 'settings' && state.currentUser && <Settings user={state.currentUser} onUpdateUser={handleUpdateUser} />}
+      {state.view === 'settings' && state.currentUser && <Settings user={state.currentUser} onUpdateUser={handleUpdateUser} tasks={state.tasks} />}
     </Layout>
   );
 };
