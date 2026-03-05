@@ -13,15 +13,17 @@ const Login: React.FC<LoginProps> = ({ onLogin }) => {
   const [formData, setFormData] = useState({ username: '', email: '', password: '' });
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
-  const [particles, setParticles] = useState<Array<{x: number, y: number, vx: number, vy: number}>>([]);
+  const [particles, setParticles] = useState<Array<{x: number, y: number, vx: number, vy: number, size: number, delay: number}>>([]);
 
   useEffect(() => {
-    // Create floating particles
-    const newParticles = Array.from({ length: 20 }, () => ({
+    // Create floating particles with variety
+    const newParticles = Array.from({ length: 30 }, () => ({
       x: Math.random() * 100,
       y: Math.random() * 100,
-      vx: (Math.random() - 0.5) * 0.02,
-      vy: (Math.random() - 0.5) * 0.02
+      vx: (Math.random() - 0.5) * 0.03,
+      vy: (Math.random() - 0.5) * 0.03,
+      size: Math.random() * 4 + 1,
+      delay: Math.random() * 5
     }));
     setParticles(newParticles);
   }, []);
@@ -111,28 +113,70 @@ const Login: React.FC<LoginProps> = ({ onLogin }) => {
       {/* Animated background */}
       <div className="absolute inset-0 futuristic-bg"></div>
       <div className="absolute inset-0 grid-bg"></div>
+      <div className="absolute inset-0 noise-overlay"></div>
       
       {/* Floating particles */}
-      <div className="absolute inset-0 pointer-events-none">
+      <div className="absolute inset-0 pointer-events-none overflow-hidden">
         {particles.map((p, i) => (
           <div
             key={i}
-            className="absolute w-2 h-2 rounded-full bg-indigo-500/30"
+            className="absolute rounded-full"
             style={{
               left: `${p.x}%`,
               top: `${p.y}%`,
-              animation: `float ${3 + Math.random() * 4}s ease-in-out infinite`,
-              animationDelay: `${Math.random() * 2}s`
+              width: `${p.size}px`,
+              height: `${p.size}px`,
+              background: i % 3 === 0 
+                ? 'rgba(99, 102, 241, 0.4)' 
+                : i % 3 === 1 
+                  ? 'rgba(139, 92, 246, 0.4)' 
+                  : 'rgba(34, 211, 238, 0.4)',
+              boxShadow: i % 3 === 0 
+                ? '0 0 10px rgba(99, 102, 241, 0.5)' 
+                : i % 3 === 1 
+                  ? '0 0 10px rgba(139, 92, 246, 0.5)' 
+                  : '0 0 10px rgba(34, 211, 238, 0.5)',
+              animation: `floatParticle ${4 + Math.random() * 4}s ease-in-out infinite`,
+              animationDelay: `${p.delay}s`
             }}
           />
+        ))}
+      </div>
+
+      {/* Geometric shapes */}
+      <div className="absolute inset-0 pointer-events-none">
+        {['◇', '△', '○', '☆', '◈', '⬡'].map((shape, i) => (
+          <div
+            key={i}
+            className="absolute text-2xl"
+            style={{
+              left: `${10 + i * 15}%`,
+              top: `${20 + (i % 3) * 25}%`,
+              color: i % 4 === 0 ? 'rgba(99, 102, 241, 0.15)' : i % 4 === 1 ? 'rgba(139, 92, 246, 0.15)' : i % 4 === 2 ? 'rgba(34, 211, 238, 0.15)' : 'rgba(16, 185, 129, 0.15)',
+              animation: `floatShape ${15 + i * 2}s linear infinite`,
+              animationDelay: `${i * -3}s`
+            }}
+          >
+            {shape}
+          </div>
         ))}
       </div>
 
       <div className="max-w-md w-full relative z-10">
         {/* Logo */}
         <div className="text-center mb-10 relative">
-          <div className="inline-flex items-center justify-center w-24 h-24 rounded-3xl bg-gradient-to-br from-indigo-600 to-purple-600 text-white shadow-2xl shadow-indigo-500/30 mb-6 animate-float">
-            <span className="text-4xl font-extrabold">T</span>
+          {/* Glow effects */}
+          <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-40 h-40 bg-indigo-500/30 rounded-full blur-3xl"></div>
+          <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-24 h-24 bg-cyan-500/20 rounded-full blur-2xl animate-pulse"></div>
+          
+          <div className="relative">
+            <div className="inline-flex items-center justify-center w-28 h-28 rounded-3xl bg-gradient-to-br from-indigo-600 via-purple-600 to-cyan-500 text-white shadow-2xl shadow-indigo-500/40 mb-6 animate-float relative overflow-hidden">
+              <span className="text-5xl font-extrabold relative z-10">T</span>
+              {/* Shimmer */}
+              <span className="absolute inset-0 bg-gradient-to-r from-transparent via-white/30 to-transparent -translate-x-full animate-shimmer"></span>
+              {/* Glow ring */}
+              <span className="absolute inset-0 rounded-3xl ring-1 ring-white/20"></span>
+            </div>
           </div>
           <h1 className="text-5xl font-extrabold text-gradient tracking-tight">TaskFlow Pro</h1>
           <p className="text-gray-400 mt-3 text-lg">AI-Powered Productivity</p>
@@ -140,10 +184,19 @@ const Login: React.FC<LoginProps> = ({ onLogin }) => {
 
         {/* Mode Toggle */}
         <div className="flex justify-center mb-8">
-          <div className="glass rounded-2xl p-1 flex">
+          <div className="glass rounded-2xl p-1.5 flex relative">
+            {/* Sliding indicator */}
+            <div 
+              className="absolute top-1.5 h-10 bg-gradient-to-r from-indigo-500 to-purple-500 rounded-xl transition-all duration-300 ease-out"
+              style={{ 
+                width: 'calc(50% - 4px)',
+                left: isCloudMode ? 'calc(50% + 2px)' : '4px'
+              }}
+            ></div>
+            
             <button
               onClick={() => setIsCloudMode(false)}
-              className={`px-6 py-3 rounded-xl font-semibold transition-all ${!isCloudMode ? 'bg-indigo-600 text-white shadow-lg' : 'text-gray-400 hover:text-white'}`}
+              className={`relative z-10 px-6 py-2.5 rounded-xl font-semibold text-sm transition-all duration-300 ${!isCloudMode ? 'text-white' : 'text-gray-400 hover:text-white'}`}
             >
               <span className="flex items-center gap-2">
                 <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -154,7 +207,7 @@ const Login: React.FC<LoginProps> = ({ onLogin }) => {
             </button>
             <button
               onClick={() => setIsCloudMode(true)}
-              className={`px-6 py-3 rounded-xl font-semibold transition-all ${isCloudMode ? 'bg-gradient-to-r from-cyan-500 to-blue-500 text-white shadow-lg' : 'text-gray-400 hover:text-white'}`}
+              className={`relative z-10 px-6 py-2.5 rounded-xl font-semibold text-sm transition-all duration-300 ${isCloudMode ? 'text-white' : 'text-gray-400 hover:text-white'}`}
             >
               <span className="flex items-center gap-2">
                 <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -166,15 +219,23 @@ const Login: React.FC<LoginProps> = ({ onLogin }) => {
           </div>
         </div>
 
-        <div className="glass-card p-10 rounded-3xl shadow-2xl border border-white/10">
-          <div className="flex items-center gap-3 mb-8">
-            <div className={`w-3 h-3 rounded-full ${isCloudMode ? 'bg-cyan-400' : 'bg-indigo-400'} animate-pulse`}></div>
+        <div className="glass-card p-10 rounded-3xl shadow-2xl border border-white/10 relative overflow-hidden">
+          {/* Decorative elements */}
+          <div className="absolute -top-20 -right-20 w-40 h-40 bg-indigo-500/10 rounded-full blur-3xl"></div>
+          <div className="absolute -bottom-20 -left-20 w-40 h-40 bg-cyan-500/10 rounded-full blur-3xl"></div>
+          
+          {/* Corner decorations */}
+          <div className="absolute top-0 left-0 w-16 h-16 border-t-2 border-l-2 border-indigo-500/20 rounded-tl-3xl"></div>
+          <div className="absolute bottom-0 right-0 w-16 h-16 border-b-2 border-r-2 border-indigo-500/20 rounded-br-3xl"></div>
+
+          <div className="flex items-center gap-3 mb-8 relative z-10">
+            <div className={`w-3 h-3 rounded-full ${isCloudMode ? 'bg-cyan-400' : 'bg-indigo-400'} animate-pulse shadow-[0_0_10px_currentColor]`}></div>
             <h2 className="text-2xl font-bold text-white">
               {isCloudMode ? (isRegister ? 'Create Cloud Account' : 'Cloud Login') : (isRegister ? 'Create Local Account' : 'Welcome Back')}
             </h2>
           </div>
 
-          <form onSubmit={handleSubmit} className="space-y-5">
+          <form onSubmit={handleSubmit} className="space-y-5 relative z-10">
             {isRegister && (
               <div className="group">
                 <label className="block text-sm font-semibold text-gray-300 mb-2">Username</label>
@@ -232,8 +293,8 @@ const Login: React.FC<LoginProps> = ({ onLogin }) => {
             </div>
 
             {error && (
-              <div className="p-4 rounded-xl bg-red-500/10 border border-red-500/20 text-red-400 text-sm font-medium flex items-center gap-2">
-                <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <div className="p-4 rounded-xl bg-red-500/10 border border-red-500/20 text-red-400 text-sm font-medium flex items-center gap-2 animate-shake">
+                <svg className="w-5 h-5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
                 </svg>
                 {error}
@@ -243,22 +304,30 @@ const Login: React.FC<LoginProps> = ({ onLogin }) => {
             <button
               type="submit"
               disabled={loading}
-              className={`w-full py-4 font-bold rounded-2xl transition-all active:scale-[0.98] mt-4 flex items-center justify-center gap-2 ${isCloudMode ? 'futuristic-btn accent-btn' : 'futuristic-btn'}`}
+              className={`w-full py-4 font-bold rounded-2xl transition-all active:scale-[0.98] mt-4 flex items-center justify-center gap-2 relative overflow-hidden ${
+                isCloudMode 
+                  ? 'bg-gradient-to-r from-cyan-500 via-blue-500 to-indigo-500' 
+                  : 'bg-gradient-to-r from-indigo-500 via-purple-500 to-indigo-500'
+              }`}
             >
-              {loading ? (
-                <div className="w-6 h-6 border-2 border-white/30 border-t-white rounded-full animate-spin" />
-              ) : (
-                <>
-                  {isRegister ? 'Create Account' : 'Sign In'}
-                  <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 7l5 5m0 0l-5 5m5-5H6" />
-                  </svg>
-                </>
-              )}
+              <span className="relative z-10 flex items-center gap-2">
+                {loading ? (
+                  <span className="w-6 h-6 border-2 border-white/30 border-t-white rounded-full animate-spin" />
+                ) : (
+                  <>
+                    {isRegister ? 'Create Account' : 'Sign In'}
+                    <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 7l5 5m0 0l-5 5m5-5H6" />
+                    </svg>
+                  </>
+                )}
+              </span>
+              {/* Shine effect */}
+              <span className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent -translate-x-full hover:translate-x-full transition-transform duration-700"></span>
             </button>
           </form>
 
-          <div className="mt-8 pt-6 border-t border-white/10 text-center">
+          <div className="mt-8 pt-6 border-t border-white/10 text-center relative z-10">
             <p className="text-gray-400">
               {isRegister ? 'Already have an account?' : "New here?"}
               <button
@@ -271,9 +340,9 @@ const Login: React.FC<LoginProps> = ({ onLogin }) => {
           </div>
 
           {isCloudMode && (
-            <div className="mt-6 p-4 rounded-xl bg-cyan-500/10 border border-cyan-500/20">
+            <div className="mt-6 p-4 rounded-xl bg-cyan-500/10 border border-cyan-500/20 relative z-10">
               <p className="text-xs text-cyan-300 flex items-center gap-2">
-                <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <svg className="w-4 h-4 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
                 </svg>
                 Cloud mode syncs your tasks across devices. Your data is encrypted and stored securely.
@@ -282,10 +351,34 @@ const Login: React.FC<LoginProps> = ({ onLogin }) => {
           )}
         </div>
 
-        <div className="mt-8 text-center text-gray-500 text-sm">
+        <div className="mt-8 text-center text-gray-500 text-sm relative z-10">
           <p>© 2026 TaskFlow Pro. {isCloudMode ? 'Powered by cloud sync.' : 'All data saved locally in your browser.'}</p>
         </div>
       </div>
+      
+      {/* Add keyframes for particles */}
+      <style>{`
+        @keyframes floatParticle {
+          0%, 100% { transform: translate(0, 0) scale(1); opacity: 0.6; }
+          25% { transform: translate(10px, -15px) scale(1.1); opacity: 0.8; }
+          50% { transform: translate(-5px, -25px) scale(0.9); opacity: 0.4; }
+          75% { transform: translate(-15px, -10px) scale(1.05); opacity: 0.7; }
+        }
+        @keyframes floatShape {
+          0% { transform: translateY(100vh) rotate(0deg); opacity: 0; }
+          10% { opacity: 1; }
+          90% { opacity: 1; }
+          100% { transform: translateY(-100vh) rotate(360deg); opacity: 0; }
+        }
+        @keyframes shake {
+          0%, 100% { transform: translateX(0); }
+          25% { transform: translateX(-5px); }
+          75% { transform: translateX(5px); }
+        }
+        .animate-shake {
+          animation: shake 0.3s ease-in-out;
+        }
+      `}</style>
     </div>
   );
 };
