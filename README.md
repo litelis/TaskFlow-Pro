@@ -31,35 +31,40 @@ A high-performance, real-world task management application featuring AI-powered 
 
 ## 🚀 How to Get Your FREE NVIDIA API Key
 
-**TOTALMENTE GRÁTIS** - No credit card required!
+**TOTALMENTE GRÁTIS** - No credit card required! 🇪🇸
 
 Follow these steps:
 
 1. **Go to NVIDIA Build**: Visit [https://build.nvidia.com/](https://build.nvidia.com/)
-2. **Sign In**: Click "Sign In" in the top right corner
-   - You can sign in with Google, GitHub, or other providers
-   - Make sure you have an account signed in
+2. **Sign In / Iniciar sesión**: 
+   - Click "Sign In" in the top right corner
+   - You can sign in with **Google**, **GitHub**, or other providers
+   - ⚠️ **IMPORTANT**: Make sure you have your NVIDIA session started/iniciada
 3. **Select a Model**: Choose any model (we recommend **Qwen/Qwen3.5-32B** or similar)
-4. **Get API Key**: 
-   - Click on the **"API Key"** tab or button
-   - Click **"Generate Key"** or **"Get API Key"**
+4. **Get API Key / Obtener API Key**: 
+   - Look for the **"Code"** button/code tab
+   - Click **"Generate API Key"** or **"Get API Key"**
    - Copy your API key
-5. **That's it!** You now have free access to NVIDIA's AI models
+5. **¡Eso es todo!** You now have free access to NVIDIA's AI models
 
-### Configure Your API Key
+### Where to put your API Key
 
-Create a `.env` file in the root directory of the project:
+You have TWO options:
+
+#### Option 1: Environment File (Recommended)
+Create a `.env` file in the root directory:
 
 ```env
-VITE_NVIDIA_API_KEY=your_api_key_here
+VITE_NVIDIA_API_KEY=nvapi-xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 ```
 
-Or create a `.env.local` file:
-```env
-VITE_NVIDIA_API_KEY=nvapi-your_api_key_here
-```
+#### Option 2: In the App Settings
+1. Open TaskFlow Pro in your browser
+2. Go to **Settings**
+3. Enter your API key in the **NVIDIA API Key** field
+4. Click **Save & Enable AI**
 
-**Important**: The key usually starts with `nvapi-`. Make sure to include the full key.
+Your key will be stored locally in your browser - no data is sent to external servers!
 
 ---
 
