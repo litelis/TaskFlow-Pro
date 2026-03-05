@@ -91,13 +91,16 @@ const Settings: React.FC<SettingsProps> = ({ user, onUpdateUser, tasks = [] }) =
     <div className="space-y-8 pb-20 md:pb-0">
       {/* Header */}
       <div className="text-center relative">
-        <h2 className="text-4xl font-extrabold text-gradient">Settings</h2>
+        {/* Glow effects */}
+        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-40 h-40 bg-purple-500/20 rounded-full blur-3xl"></div>
+        
+        <h2 className="text-4xl font-extrabold text-gradient relative z-10">Settings</h2>
         <p className="text-gray-400 mt-2">Manage your account and integrations</p>
         
         {/* Sync Status Badge */}
         {user.cloudEnabled && (
           <div className="inline-flex items-center gap-2 mt-4 px-4 py-2 rounded-full bg-cyan-500/10 border border-cyan-500/20">
-            <div className="w-2 h-2 rounded-full bg-cyan-400 animate-pulse"></div>
+            <div className="w-2 h-2 rounded-full bg-cyan-400 animate-pulse shadow-[0_0_10px_rgba(34,211,238,0.8)]"></div>
             <span className="text-cyan-300 text-sm font-medium">Cloud Sync Active</span>
             {user.lastSyncedAt && (
               <span className="text-gray-500 text-xs">
@@ -110,19 +113,30 @@ const Settings: React.FC<SettingsProps> = ({ user, onUpdateUser, tasks = [] }) =
 
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
         {/* Profile Card */}
-        <div className="glass-card p-8 rounded-3xl border border-white/10 futuristic-card">
-          <h3 className="text-xl font-bold text-white flex items-center gap-3 mb-6">
-            <div className="w-10 h-10 rounded-xl bg-indigo-600/20 flex items-center justify-center">
+        <div className="group relative p-8 rounded-2xl glass-card border border-[#1e1e2e] hover:border-indigo-500/30 transition-all duration-300">
+          {/* Glow effect */}
+          <div className="absolute inset-0 rounded-2xl bg-gradient-to-br from-indigo-500/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
+          
+          {/* Corner decorations */}
+          <div className="absolute top-0 left-0 w-8 h-8 border-t-2 border-l-2 border-indigo-500/30 rounded-tl-xl"></div>
+          <div className="absolute bottom-0 right-0 w-8 h-8 border-b-2 border-r-2 border-indigo-500/30 rounded-br-xl"></div>
+          
+          <h3 className="text-xl font-bold text-white flex items-center gap-3 mb-6 relative z-10">
+            <div className="w-10 h-10 rounded-xl bg-indigo-500/20 flex items-center justify-center">
               <svg className="w-5 h-5 text-indigo-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
               </svg>
             </div>
             Profile Information
           </h3>
-          <div className="space-y-4">
-            <div className="flex items-center gap-4 p-4 rounded-2xl bg-white/5">
-              <div className="w-16 h-16 rounded-2xl bg-gradient-to-br from-indigo-600 to-purple-600 flex items-center justify-center text-white text-2xl font-bold">
-                {user.username[0].toUpperCase()}
+          
+          <div className="space-y-4 relative z-10">
+            <div className="flex items-center gap-4 p-4 rounded-2xl bg-[#151520]/50 border border-[#1e1e2e]">
+              <div className="relative">
+                <div className="w-16 h-16 rounded-2xl bg-gradient-to-br from-indigo-500 to-purple-600 flex items-center justify-center text-white text-2xl font-bold shadow-lg shadow-indigo-500/30">
+                  {user.username[0].toUpperCase()}
+                </div>
+                <div className="absolute -bottom-1 -right-1 w-5 h-5 bg-green-500 rounded-full border-2 border-[#0a0a12]"></div>
               </div>
               <div>
                 <p className="text-white font-semibold text-lg">{user.username}</p>
@@ -130,12 +144,16 @@ const Settings: React.FC<SettingsProps> = ({ user, onUpdateUser, tasks = [] }) =
                 <div className="flex items-center gap-2 mt-1">
                   {user.cloudEnabled ? (
                     <span className="text-xs text-cyan-400 flex items-center gap-1">
-                      <svg className="w-3 h-3" fill="currentColor" viewBox="0 0 20 20"><path d="M5.5 16a3.5 3.5 0 01-.369-6.98 4 4 0 117.753-1.977A4.5 4.5 0 1113.5 16h-8z"/></svg>
+                      <svg className="w-3 h-3" fill="currentColor" viewBox="0 0 20 20">
+                        <path d="M5.5 16a3.5 3.5 0 01-.369-6.98 4 4 0 117.753-1.977A4.5 4.5 0 1113.5 16h-8z"/>
+                      </svg>
                       Cloud Account
                     </span>
                   ) : (
                     <span className="text-xs text-gray-500 flex items-center gap-1">
-                      <svg className="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 7v10c0 2.21 3.582 4 8 4s8-1.79 8-4V7"/></svg>
+                      <svg className="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 7v10c0 2.21 3.582 4 8 4s8-1.79 8-4V7"/>
+                      </svg>
                       Local Account
                     </span>
                   )}
@@ -146,9 +164,14 @@ const Settings: React.FC<SettingsProps> = ({ user, onUpdateUser, tasks = [] }) =
         </div>
 
         {/* Cloud Sync Card */}
-        <div className="glass-card p-8 rounded-3xl border border-white/10 futuristic-card">
-          <h3 className="text-xl font-bold text-white flex items-center gap-3 mb-6">
-            <div className="w-10 h-10 rounded-xl bg-cyan-600/20 flex items-center justify-center">
+        <div className="group relative p-8 rounded-2xl glass-card border border-[#1e1e2e] hover:border-cyan-500/30 transition-all duration-300">
+          <div className="absolute inset-0 rounded-2xl bg-gradient-to-br from-cyan-500/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
+          
+          <div className="absolute top-0 left-0 w-8 h-8 border-t-2 border-l-2 border-cyan-500/30 rounded-tl-xl"></div>
+          <div className="absolute bottom-0 right-0 w-8 h-8 border-b-2 border-r-2 border-cyan-500/30 rounded-br-xl"></div>
+          
+          <h3 className="text-xl font-bold text-white flex items-center gap-3 mb-6 relative z-10">
+            <div className="w-10 h-10 rounded-xl bg-cyan-500/20 flex items-center justify-center">
               <svg className="w-5 h-5 text-cyan-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 15a4 4 0 004 4h9a5 5 0 10-.1-9.999 5.002 5.002 0 10-9.78 2.096A4.001 4.001 0 003 15z" />
               </svg>
@@ -157,7 +180,7 @@ const Settings: React.FC<SettingsProps> = ({ user, onUpdateUser, tasks = [] }) =
           </h3>
           
           {!user.cloudEnabled ? (
-            <div className="space-y-4">
+            <div className="space-y-4 relative z-10">
               <p className="text-gray-400 text-sm">Enable cloud sync to access your tasks from any device.</p>
               <div className="space-y-3">
                 <input
@@ -179,26 +202,28 @@ const Settings: React.FC<SettingsProps> = ({ user, onUpdateUser, tasks = [] }) =
               <button
                 onClick={handleEnableCloud}
                 disabled={cloudLoading}
-                className="w-full py-3 rounded-xl font-semibold transition-all flex items-center justify-center gap-2 bg-gradient-to-r from-cyan-600 to-blue-600 hover:from-cyan-500 hover:to-blue-500 text-white"
+                className="w-full py-3 rounded-xl font-semibold transition-all flex items-center justify-center gap-2 relative overflow-hidden bg-gradient-to-r from-cyan-600 to-blue-600 hover:from-cyan-500 hover:to-blue-500 text-white"
               >
-                {cloudLoading ? (
-                  <div className="w-5 h-5 border-2 border-white/30 border-t-white rounded-full animate-spin" />
-                ) : (
-                  <>
-                    <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 10V3L4 14h7v7l9-11h-7z" />
-                    </svg>
-                    Enable Cloud Sync
-                  </>
-                )}
+                <span className="relative z-10 flex items-center gap-2">
+                  {cloudLoading ? (
+                    <div className="w-5 h-5 border-2 border-white/30 border-t-white rounded-full animate-spin" />
+                  ) : (
+                    <>
+                      <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 10V3L4 14h7v7l9-11h-7z" />
+                      </svg>
+                      Enable Cloud Sync
+                    </>
+                  )}
+                </span>
               </button>
             </div>
           ) : (
-            <div className="space-y-4">
+            <div className="space-y-4 relative z-10">
               <div className="p-4 rounded-2xl bg-cyan-500/10 border border-cyan-500/20">
                 <div className="flex items-center justify-between mb-3">
                   <span className="text-cyan-300 font-medium">Cloud Sync Enabled</span>
-                  <div className="w-3 h-3 rounded-full bg-cyan-400 animate-pulse"></div>
+                  <div className="w-3 h-3 rounded-full bg-cyan-400 animate-pulse shadow-[0_0_10px_rgba(34,211,238,0.8)]"></div>
                 </div>
                 <p className="text-gray-400 text-sm">Your tasks are automatically synced to the cloud.</p>
               </div>
@@ -237,22 +262,27 @@ const Settings: React.FC<SettingsProps> = ({ user, onUpdateUser, tasks = [] }) =
         </div>
 
         {/* NVIDIA API Card */}
-        <div className="glass-card p-8 rounded-3xl border border-white/10 futuristic-card">
-          <h3 className="text-xl font-bold text-white flex items-center gap-3 mb-6">
-            <div className="w-10 h-10 rounded-xl bg-green-600/20 flex items-center justify-center">
+        <div className="group relative p-8 rounded-2xl glass-card border border-[#1e1e2e] hover:border-green-500/30 transition-all duration-300">
+          <div className="absolute inset-0 rounded-2xl bg-gradient-to-br from-green-500/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
+          
+          <div className="absolute top-0 left-0 w-8 h-8 border-t-2 border-l-2 border-green-500/30 rounded-tl-xl"></div>
+          <div className="absolute bottom-0 right-0 w-8 h-8 border-b-2 border-r-2 border-green-500/30 rounded-br-xl"></div>
+          
+          <h3 className="text-xl font-bold text-white flex items-center gap-3 mb-6 relative z-10">
+            <div className="w-10 h-10 rounded-xl bg-green-500/20 flex items-center justify-center">
               <svg className="w-5 h-5 text-green-400" fill="currentColor" viewBox="0 0 24 24">
                 <path d="M12 0L1.5 6v12L12 24l10.5-6V6L12 0zm0 2.25l7.5 4.5v9l-7.5 4.5-7.5-4.5v-9l7.5-4.5z"/>
               </svg>
             </div>
             NVIDIA AI
           </h3>
-          <p className="text-gray-400 text-sm mb-4">
+          <p className="text-gray-400 text-sm mb-4 relative z-10">
             Enter your NVIDIA API Key for AI features. Get your FREE key at{' '}
             <a href="https://build.nvidia.com/" target="_blank" rel="noopener noreferrer" className="text-indigo-400 hover:underline">
               build.nvidia.com
             </a>
           </p>
-          <div className="space-y-3">
+          <div className="space-y-3 relative z-10">
             <input
               className="w-full px-4 py-3 rounded-xl futuristic-input text-white placeholder-gray-500"
               placeholder="nvapi-xxxxxxxxxxxxxxxxxxxxxxxx"
@@ -280,8 +310,13 @@ const Settings: React.FC<SettingsProps> = ({ user, onUpdateUser, tasks = [] }) =
         </div>
 
         {/* Discord Card */}
-        <div className="glass-card p-8 rounded-3xl border border-white/10 futuristic-card">
-          <h3 className="text-xl font-bold text-white flex items-center gap-3 mb-6">
+        <div className="group relative p-8 rounded-2xl glass-card border border-[#1e1e2e] hover:border-[#5865F2]/50 transition-all duration-300">
+          <div className="absolute inset-0 rounded-2xl bg-gradient-to-br from-[#5865F2]/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
+          
+          <div className="absolute top-0 left-0 w-8 h-8 border-t-2 border-l-2 border-[#5865F2]/30 rounded-tl-xl"></div>
+          <div className="absolute bottom-0 right-0 w-8 h-8 border-b-2 border-r-2 border-[#5865F2]/30 rounded-br-xl"></div>
+          
+          <h3 className="text-xl font-bold text-white flex items-center gap-3 mb-6 relative z-10">
             <div className="w-10 h-10 rounded-xl bg-[#5865F2]/20 flex items-center justify-center">
               <svg className="w-5 h-5 text-[#5865F2]" fill="currentColor" viewBox="0 0 24 24">
                 <path d="M20.317 4.3698a19.7913 19.7913 0 00-4.8851-1.5152.0741.0741 0 00-.0785.0371c-.211.3753-.4447.8648-.6083 1.2495-1.8447-.2762-3.68-.2762-5.4868 0-.1636-.3933-.4058-.8742-.6177-1.2495a.077.077 0 00-.0785-.037 19.7363 19.7363 0 00-4.8852 1.515.0699.0699 0 00-.0321.0277C.5334 9.0458-.319 13.5799.0992 18.0578a.0824.0824 0 00.0312.0561c2.0528 1.5076 4.0413 2.4228 5.9929 3.0294a.0777.0777 0 00.0842-.0276c.4616-.6304.8731-1.2952 1.226-1.9942a.076.076 0 00-.0416-.1057c-.6528-.2476-1.2743-.5495-1.8722-.8923a.077.077 0 01-.0076-.1277c.1258-.0943.2517-.1923.3718-.2914a.0743.0743 0 01.0776-.0105c3.9278 1.7933 8.18 1.7933 12.0614 0a.0739.0739 0 01.0785.0095c.1202.099.246.1971.3728.2924a.077.077 0 01-.0066.1276 12.2986 12.2986 0 01-1.873.8914.0766.0766 0 00-.0407.1067c.3604.698.7719 1.3628 1.225 1.9932a.076.076 0 00.0842.0286c1.961-.6067 3.9495-1.5219 6.0023-3.0294a.077.077 0 00.0313-.0552c.5004-5.177-.8382-9.6739-3.5485-13.6604a.061.061 0 00-.0312-.0286zM8.02 15.3312c-1.1825 0-2.1569-1.0857-2.1569-2.419 0-1.3332.9555-2.4189 2.157-2.4189 1.2108 0 2.1757 1.0952 2.1568 2.419 0 1.3332-.9555 2.4189-2.1569 2.4189zm7.9748 0c-1.1825 0-2.1569-1.0857-2.1569-2.419 0-1.3332.9554-2.4189 2.1569-2.4189 1.2108 0 2.1757 1.0952 2.1568 2.419 0 1.3332-.946 2.4189-2.1568 2.4189z" />
@@ -289,8 +324,8 @@ const Settings: React.FC<SettingsProps> = ({ user, onUpdateUser, tasks = [] }) =
             </div>
             Discord
           </h3>
-          <p className="text-gray-400 text-sm mb-4">Get notified about deadlines directly in Discord.</p>
-          <div className="space-y-3">
+          <p className="text-gray-400 text-sm mb-4 relative z-10">Get notified about deadlines directly in Discord.</p>
+          <div className="space-y-3 relative z-10">
             <input
               className="w-full px-4 py-3 rounded-xl futuristic-input text-white placeholder-gray-500"
               placeholder="https://discord.com/api/webhooks/..."
@@ -299,7 +334,11 @@ const Settings: React.FC<SettingsProps> = ({ user, onUpdateUser, tasks = [] }) =
             />
             <button
               onClick={handleSave}
-              className="w-full py-3 rounded-xl font-semibold transition-all flex items-center justify-center gap-2 bg-[#5865F2] hover:bg-[#4752C4] text-white"
+              className={`w-full py-3 rounded-xl font-semibold transition-all flex items-center justify-center gap-2 ${
+                saved 
+                  ? 'bg-green-600 hover:bg-green-500' 
+                  : 'bg-[#5865F2] hover:bg-[#4752C4]'
+              } text-white`}
             >
               {saved ? (
                 <>
