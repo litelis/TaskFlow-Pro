@@ -15,7 +15,14 @@ A high-performance, real-world task management application featuring AI-powered 
 - A modern web browser.
 - **NVIDIA API Key** (see below for FREE setup).
 
-### Installation
+### Option 1: Use Online (No Installation Required!)
+✅ **Already deployed and ready to use!**
+
+Visit: **https://taskflow-pro.vercel.app** (or similar hosting platform)
+
+Just open the link in your browser - no need to install anything!
+
+### Option 2: Run Locally
 1. Clone the repository.
 2. Install dependencies:
    ```bash
@@ -26,6 +33,19 @@ A high-performance, real-world task management application featuring AI-powered 
    ```bash
    npm run dev
    ```
+
+---
+
+## 💾 Where Are Tasks Saved?
+
+**All your data is stored locally in your browser!**
+
+- Tasks, user account, and settings are saved in **localStorage**
+- Your data never leaves your device
+- Data persists even if you close the browser
+- To clear all data, clear your browser's local storage
+
+⚠️ **Important**: Since data is stored locally, if you use different browsers or clear cache, your data will be lost. Consider exporting your tasks if you need to keep them.
 
 ---
 
